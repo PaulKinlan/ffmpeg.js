@@ -113,7 +113,6 @@ const HEADER_LENGTH = Object.keys(HEADER).length;
 var __ffmpegjs_utf8ToStr;
 
 function __ffmpegjs(__ffmpegjs_opts) {
-  __ffmpegjs_utf8ToStr = UTF8ArrayToString;
   __ffmpegjs_opts = __ffmpegjs_opts || {};
   var __ffmpegjs_abort = abort;
   var __ffmpegjs_return;
@@ -133,7 +132,7 @@ function __ffmpegjs(__ffmpegjs_opts) {
   }
 
   Object.keys(__ffmpegjs_opts).forEach(function(key) {
-    if (key != "mounts" && key != "MEMFS" && key != "onExit") {
+    if (["mounts", "MEMFS", "onExit", "chdir"].indexOf(key) < 0) {
       Module[key] = __ffmpegjs_opts[key];
     }
   });
@@ -147,8 +146,32 @@ function __ffmpegjs(__ffmpegjs_opts) {
     }
   };
 
+  // Fix CR.
+  function makeOutHandler(cb) {
+    var buf = [];
+    return function(ch, flush) {
+      if (flush && buf.length) return cb(UTF8ArrayToString(buf, 0));
+      if (ch === 10 || ch === 13) {
+        if (ENVIRONMENT_IS_NODE) buf.push(ch);
+        cb(UTF8ArrayToString(buf, 0));
+        buf = [];
+      } else if (ch !== 0) {
+        buf.push(ch);
+      }
+    };
+  }
+  Module["stdin"] = Module["stdin"] || function() {};
+  Module["stdout"] = Module["stdout"] || makeOutHandler(function(line) { out(line) });
+  Module["stderr"] = Module["stderr"] || makeOutHandler(function(line) { err(line) });
+  if (typeof process === "object") {
+    Module["print"] = Module["print"] || process.stdout.write.bind(process.stdout);
+    Module["printErr"] = Module["printErr"] || process.stderr.write.bind(process.stderr);
+  }
+
   // Disable process.exit in nodejs and don't call onExit twice.
   Module["quit"] = function(status) {
+    Module["stdout"](0, true);
+    Module["stderr"](0, true);
     if (__ffmpegjs_opts["onExit"]) __ffmpegjs_opts["onExit"](status);
   };
 
@@ -184,7 +207,7 @@ function __ffmpegjs(__ffmpegjs_opts) {
     });
 
     FS.mkdir("/work");
-    FS.chdir("/work");
+    FS.chdir(__ffmpegjs_opts["chdir"] || "/work");
 
     (__ffmpegjs_opts["MEMFS"] || []).forEach(function(file) {
       if (file["name"].match(/\//)) {
