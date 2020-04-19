@@ -1,0 +1,54 @@
+
+> ffmpeg.js@4.2.9000 test /usr/local/google/home/paulkinlan/ffmpeg.js
+> mocha test/test.js "-g" "stdin"
+
+
+
+  WebM
+    Worker
+SharedArrayBuffer {
+  [Uint8Contents]: <00 00 00 00 36 03 06 00 00 00 00 00 00 00 00 00 1a 45 df a3 01 00 00 00 00 00 00 1f 42 86 81 01 42 f7 81 01 42 f2 81 04 42 f3 81 08 42 82 84 77 65 62 6d 42 87 81 02 42 85 81 02 18 53 80 67 01 00 00 00 00 06 02 ff 11 4d 9b 74 40 2d 4d bb 8b 53 ab 84 15 49 a9 66 53 ac 81 df 4d bb 8c 53 ab 84 16 54 ae ... 10485676 more bytes>,
+  byteLength: 10485776
+}
+stderr ffmpeg version n4.2.2 Copyright (c) 2000-2019 the FFmpeg developers
+stderr   built with emcc (Emscripten gcc/clang-like replacement) 1.39.13
+stderr   configuration: --cc=emcc --ranlib=emranlib --enable-cross-compile --target-os=none --arch=x86 --disable-runtime-cpudetect --disable-asm --disable-fast-unaligned --disable-pthreads --disable-w32threads --disable-os2threads --disable-debug --disable-stripping --disable-safe-bitstream-reader --disable-all --enable-ffmpeg --enable-avcodec --enable-avformat --enable-avfilter --enable-swresample --enable-swscale --disable-network --disable-d3d11va --disable-dxva2 --disable-vaapi --disable-vdpau --enable-decoder=vp8 --enable-decoder=h264 --enable-decoder=vorbis --enable-decoder=opus --enable-decoder=mp3 --enable-decoder=aac --enable-decoder=pcm_s16le --enable-demuxer=matroska --enable-demuxer=ogg --enable-demuxer=mov --enable-demuxer=mp3 --enable-demuxer=wav --enable-demuxer=concat --enable-protocol=file --enable-filter=aresample --enable-filter=scale --enable-filter=crop --enable-filter=overlay --enable-filter=hstack --enable-filter=vstack --disable-bzlib --disable-iconv --disable-libxcb --disable-lzma --disable-sdl2 --disable-securetransport --disable-xlib --disable-zlib --enable-encoder=libvpx_vp8 --enable-encoder=libopus --enable-muxer=webm --enable-muxer=ogg --enable-muxer=null --enable-libopus --enable-libvpx --extra-cflags=-I../libvpx/dist/include --extra-ldflags=-L../libvpx/dist/lib
+stderr   libavutil      56. 31.100 / 56. 31.100
+stderr   libavcodec     58. 54.100 / 58. 54.100
+stderr   libavformat    58. 29.100 / 58. 29.100
+stderr   libavfilter     7. 57.100 /  7. 57.100
+stderr   libswscale      5.  5.100 /  5.  5.100
+stderr   libswresample   3.  5.100 /  3.  5.100
+stderr [vp8 @ 0x6ac758] Warning: not compiled with thread support, using thread emulation
+stderr [vorbis @ 0x6af528] Warning: not compiled with thread support, using thread emulation
+stderr Input #0, matroska,webm, from '/dev/stdin':
+stderr   Metadata:
+stderr     encoder         : Lavf56.40.100
+stderr   Duration: 00:00:03.95, start: 0.000000, bitrate: N/A
+stderr     Stream #0:0: Video: vp8, yuv420p, 854x480, SAR 1:1 DAR 427:240, 24 fps, 24 tbr, 1k tbn, 1k tbc (default)
+stderr     Stream #0:1: Audio: vorbis, 48000 Hz, stereo, fltp (default)
+stderr     Stream #0:2(eng): Subtitle: webvtt
+stderr [vp8 @ 0x6b32e0] Warning: not compiled with thread support, using thread emulation
+stderr Stream mapping:
+stderr   Stream #0:0 -> #0:0 (vp8 (native) -> vp8 (libvpx))
+stderr [libvpx @ 0x6c0548] Warning: not compiled with thread support, using thread emulation
+stderr [libvpx @ 0x6c0548] v1.8.2
+stderr Output #0, webm, to 'out.webm':
+stderr   Metadata:
+stderr     encoder         : Lavf58.29.100
+stderr     Stream #0:0: Video: vp8 (libvpx), yuv420p, 854x480 [SAR 1:1 DAR 427:240], q=-1--1, 200 kb/s, 24 fps, 1k tbn, 24 tbc (default)
+stderr     Metadata:
+stderr       encoder         : Lavc58.54.100 libvpx
+stderr     Side data:
+stderr       cpb: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: -1
+stderr frame=    1 fps=0.3 q=0.0 size=       1kB time=00:00:00.00 bitrate=4760.0kbits/s speed=0.000349x    
+stderr frame=    3 fps=0.8 q=0.0 size=       1kB time=00:00:00.08 bitrate=  56.7kbits/s speed=0.0217x    
+stderr frame=    4 fps=0.9 q=0.0 size=       1kB time=00:00:00.12 bitrate=  37.8kbits/s speed=0.0273x    
+stderr frame=    5 fps=0.9 q=0.0 size=       1kB time=00:00:00.16 bitrate=  28.3kbits/s speed=0.0314x    
+stderr frame=    5 fps=0.8 q=0.0 Lsize=      37kB time=00:00:00.16 bitrate=1786.0kbits/s speed=0.0277x    
+stderr video:36kB audio:0kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 1.799479%
+      ✓ should encode test file to WebM/VP8 with stdin (6755ms)
+
+
+  1 passing (7s)
+

@@ -3,6 +3,8 @@
 
 var __ffmpegjs_running = false;
 
+let stdinRingBuffer;
+
 // Shim for nodejs
 if (typeof self === "undefined") {
   self = require("worker_threads")["parentPort"];
@@ -62,6 +64,10 @@ self.onmessage = function(e) {
       self.postMessage({"type": "done", "data": result}, transfer);
       __ffmpegjs_running = false;
     }
+  } else if (msg["type"] == "init") {
+    const buffer = msg["stdin"];
+    stdinRingBuffer = RingBuffer.from(buffer);
+    //self.postMessage({"type": "ready"}); // Should really only do this when stdin ready
   } else {
     self.postMessage({"type": "error", "data": "unknown command"});
   }

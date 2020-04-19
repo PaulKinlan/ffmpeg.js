@@ -26,8 +26,8 @@ MP4_SHARED_DEPS = \
 	build/lame/dist/lib/libmp3lame.so \
 	build/x264/dist/lib/libx264.so
 
-all: webm mp4
-webm: ffmpeg-webm.js ffmpeg-worker-webm.js
+all: webm #mp4
+webm: ffmpeg-worker-webm.js #ffmpeg-webm.js
 mp4: ffmpeg-mp4.js ffmpeg-worker-mp4.js
 
 clean: clean-js \
@@ -216,7 +216,7 @@ build/ffmpeg-mp4/ffmpeg.bc: $(MP4_SHARED_DEPS)
 
 EMCC_COMMON_ARGS = \
 	-O3 \
-	--closure 1 \
+	--closure 0 \
 	--memory-init-file 0 \
 	-s WASM=0 \
 	-s WASM_ASYNC_COMPILATION=0 \
