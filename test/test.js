@@ -341,8 +341,6 @@ describe("WebM", function () {
       const stdinBuffer = RingBuffer.create(10 * 1024 * 1024);
       stdinBuffer.append(testData);
 
-      console.log(stdinBuffer)
-
       var worker = new Worker("./ffmpeg-worker-webm.js");
       worker.postMessage({
         type: "init",
@@ -378,7 +376,6 @@ describe("WebM", function () {
             expect(mem).to.have.length(1);
             expect(mem[0].name).to.equal("out.webm");
             expect(mem[0].data.length).to.be.equal(37507);
-            console.log(mem[0])
             done();
             break;
         }
@@ -387,8 +384,8 @@ describe("WebM", function () {
   });
 
   it("should encode test file to WebM/VP8 with stdin and a tiny buffer", function (done) {
-    const stdinBuffer = RingBuffer.create(100 * 1024);
-    
+    const stdinBuffer = RingBuffer.create(1 * 1024 * 1024);
+
     // Init the worker with the stdin buffer.
     var worker = new Worker("./ffmpeg-worker-webm.js");
     worker.postMessage({
@@ -426,7 +423,6 @@ describe("WebM", function () {
           expect(mem).to.have.length(1);
           expect(mem[0].name).to.equal("out.webm");
           expect(mem[0].data.length).to.be.equal(37507);
-          console.log(mem[0])
           done();
           break;
       }
@@ -446,10 +442,10 @@ describe("WebM", function () {
         offset = offset + len;
       }
 
-      if (offset < testData.length) setTimeout(processData, 100);
+      if (offset < testData.length) setTimeout(processData, 1000);
     }
 
-    setTimeout(processData, 1000);
+    setImmediate(processData);
   })
 });
 

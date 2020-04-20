@@ -1,17 +1,17 @@
 /*
-Copyright 2020 Google Inc.
+   Copyright 2020 Google Inc.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
 
-  http://www.apache.org/licenses/LICENSE-2.0
+     http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
 */
 
 class RingBuffer {
@@ -83,14 +83,11 @@ class RingBuffer {
       + Int32Array.BYTES_PER_ELEMENT * READER_STATE_LENGTH,
       this._size
     );
-    
-    Atomics.store(this._state, READER_STATE.DATA_AVAILABLE, 0);
-    Atomics.store(this._state, READER_STATE.EOF, 1);
   }
 
   /*
     data: An array of Uint8
-    attemptToFill (deafault: false): if true, will fill as much of the array as possible 
+    attemptToFill (default: false): if true, will fill as much of the array as possible 
       returning the items that couldn't be added.
     
   */
@@ -107,7 +104,6 @@ class RingBuffer {
       );
     }
 
-    let readIndex = Atomics.load(this._header, HEADER.READ);
     let writeIndex = Atomics.load(this._header, HEADER.WRITE);
     let writeStart = writeIndex % size; 
   
@@ -121,6 +117,7 @@ class RingBuffer {
     const batch1 = data.slice(0, size - writeStart);
     this._body.set(batch1, writeStart);
     let writeLength = batch1.length;
+    let slice = undefined;
 
     if (writeLength < data.length) {
       // We are wrapping around because there was more data.
@@ -130,8 +127,8 @@ class RingBuffer {
       
       Atomics.add(this._header, HEADER.WRITE, writeLength);
       
-      if (attemptToFill && writeLength < data.length) {
-        return data.slice(writeLength);
+      if (attemptToFill && (writeLength < data.length)) {
+        slice = data.slice(writeLength);
       } 
     }
     else {
@@ -140,6 +137,8 @@ class RingBuffer {
     
     Atomics.store(this._state, READER_STATE.DATA_AVAILABLE, 1);
     Atomics.notify(this._state, READER_STATE.DATA_AVAILABLE);
+    
+    return slice;
   }
 
   // Reads the next byte of data. Note: Assuming 4GB of addressable buffer.
@@ -149,7 +148,9 @@ class RingBuffer {
     
     if (readIndex == writeIndex - 1) {
       // The next blocking read, should wait.
+      console.log('next block')
       Atomics.store(this._state, READER_STATE.DATA_AVAILABLE, 0);
+      Atomics.notify(this._state, READER_STATE.DATA_AVAILABLE)
     }
 
     if (readIndex == writeIndex) {
@@ -181,12 +182,6 @@ class RingBuffer {
   clear() {
     Atomics.store(this._header, HEADER.READ, 0);
     Atomics.store(this._header, HEADER.WRITE, 0);
-  }
-
-  debug() {
-    console.log(this._sab);
-    console.log(this._header);
-    console.log(this._body);
   }
 }
 
