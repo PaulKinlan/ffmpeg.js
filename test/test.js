@@ -319,21 +319,29 @@ describe("WebM", function () {
               MEMFS: [{ name: "test.webm", data: testData }],
             });
             break;
+          case "stdout":
+            console.log(msg.data);
+            break;
+          case "stderr":
+            console.log(msg.data);
+            break;
           case "done":
             worker.terminate();
             var mem = msg.data.MEMFS;
             expect(mem).to.have.length(1);
             expect(mem[0].name).to.equal("out.webm");
-            expect(mem[0].data.length).to.be.above(0);
+            expect(mem[0].data.length).to.be.above(49 * 1024);
             done();
             break;
         }
       });
     });
 
-    it("should encode test file to WebM/VP8 with stdin", function (done) {
+    it("should encode test file to WebM/VP8 with stdin - large buffer", function (done) {
       const stdinBuffer = RingBuffer.create(10 * 1024 * 1024);
       stdinBuffer.append(testData);
+
+      console.log(stdinBuffer)
 
       var worker = new Worker("./ffmpeg-worker-webm.js");
       worker.postMessage({
@@ -344,6 +352,12 @@ describe("WebM", function () {
       worker.on("error", done);
       worker.on("message", function (msg) {
         switch (msg.type) {
+          case "stdout":
+            console.log(msg.data);
+            break;
+          case "stderr":
+            console.log(msg.data);
+            break;
           case "ready":
             worker.postMessage({
               type: "run",
@@ -363,13 +377,80 @@ describe("WebM", function () {
             var mem = msg.data.MEMFS;
             expect(mem).to.have.length(1);
             expect(mem[0].name).to.equal("out.webm");
-            expect(mem[0].data.length).to.be.above(0);
+            expect(mem[0].data.length).to.be.equal(37507);
+            console.log(mem[0])
             done();
             break;
         }
       });
     });
   });
+
+  it("should encode test file to WebM/VP8 with stdin and a tiny buffer", function (done) {
+    const stdinBuffer = RingBuffer.create(100 * 1024);
+    
+    // Init the worker with the stdin buffer.
+    var worker = new Worker("./ffmpeg-worker-webm.js");
+    worker.postMessage({
+      type: "init",
+      stdin: stdinBuffer.buffer
+    }); 
+
+    worker.onerror = done;
+    worker.on("error", done);
+    worker.on("message", function (msg) {
+      switch (msg.type) {
+        case "stdout":
+          console.log(msg.data);
+          break;
+        case "stderr":
+          console.log(msg.data);
+          break;
+        case "ready":
+          worker.postMessage({
+            type: "run",
+            arguments: [
+              "-f", "webm",
+              "-i", "/dev/stdin",
+              "-vcodec", "webm", 
+              "-frames:v", "5", "-c:v", "libvpx",
+              "-an",
+              "out.webm",
+            ],
+            MEMFS: [{ name: "test.webm", data: testData }],
+          });
+          break;
+        case "done":
+          worker.terminate();
+          var mem = msg.data.MEMFS;
+          expect(mem).to.have.length(1);
+          expect(mem[0].name).to.equal("out.webm");
+          expect(mem[0].data.length).to.be.equal(37507);
+          console.log(mem[0])
+          done();
+          break;
+      }
+    });
+
+    let offset = 0;
+    let len = 0;
+    
+    processData = () => { 
+      // Pump the data in to the buffer.
+      len = stdinBuffer.remaining;
+
+      if (len !== 0) {
+        // Buffer is full. Spin.
+        const data = testData.slice(offset, offset + len);
+        stdinBuffer.append(data);
+        offset = offset + len;
+      }
+
+      if (offset < testData.length) setTimeout(processData, 100);
+    }
+
+    setTimeout(processData, 1000);
+  })
 });
 
 describe("MP4", function () {
