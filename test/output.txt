@@ -1,0 +1,119 @@
+
+> ffmpeg.js@4.2.9001 test /usr/local/google/home/paulkinlan/ffmpeg.js
+> mocha test/test.js "-g" "large"
+
+
+
+  WebM
+    Worker
+RingBuffer {
+  _size: 10485760,
+  _sab: SharedArrayBuffer {
+    [Uint8Contents]: <00 00 00 00 36 03 06 00 01 00 00 00 00 00 00 00 01 00 00 00 1a 45 df a3 01 00 00 00 00 00 00 1f 42 86 81 01 42 f7 81 01 42 f2 81 04 42 f3 81 08 42 82 84 77 65 62 6d 42 87 81 02 42 85 81 02 18 53 80 67 01 00 00 00 00 06 02 ff 11 4d 9b 74 40 2d 4d bb 8b 53 ab 84 15 49 a9 66 53 ac 81 df 4d bb 8c 53 ab ... 10485680 more bytes>,
+    byteLength: 10485780
+  },
+  _header: Uint32Array(2) [ 0, 394038 ],
+  _state: Int32Array(3) [ 1, 0, 1 ],
+  _body: Uint8Array(10485760) [
+     26,  69, 223, 163,   1,   0,   0,   0,   0,   0,   0,  31,
+     66, 134, 129,   1,  66, 247, 129,   1,  66, 242, 129,   4,
+     66, 243, 129,   8,  66, 130, 132, 119, 101,  98, 109,  66,
+    135, 129,   2,  66, 133, 129,   2,  24,  83, 128, 103,   1,
+      0,   0,   0,   0,   6,   2, 255,  17,  77, 155, 116,  64,
+     45,  77, 187, 139,  83, 171, 132,  21,  73, 169, 102,  83,
+    172, 129, 223,  77, 187, 140,  83, 171, 132,  22,  84, 174,
+    107,  83, 172, 130,   1,  48,  77, 187, 141,  83, 171, 132,
+     28,  83, 187, 107,
+    ... 10485660 more items
+  ]
+}
+ffmpeg version n4.2.2 Copyright (c) 2000-2019 the FFmpeg developers
+
+  built with emcc (Emscripten gcc/clang-like replacement) 1.39.13
+
+  configuration: --cc=emcc --ranlib=emranlib --enable-cross-compile --target-os=none --arch=x86 --disable-runtime-cpudetect --disable-asm --disable-fast-unaligned --disable-pthreads --disable-w32threads --disable-os2threads --disable-debug --disable-stripping --disable-safe-bitstream-reader --disable-all --enable-ffmpeg --enable-avcodec --enable-avformat --enable-avfilter --enable-swresample --enable-swscale --disable-network --disable-d3d11va --disable-dxva2 --disable-vaapi --disable-vdpau --enable-decoder=vp8 --enable-decoder=h264 --enable-decoder=vorbis --enable-decoder=opus --enable-decoder=mp3 --enable-decoder=aac --enable-decoder=pcm_s16le --enable-demuxer=matroska --enable-demuxer=ogg --enable-demuxer=mov --enable-demuxer=mp3 --enable-demuxer=wav --enable-demuxer=concat --enable-protocol=file --enable-filter=aresample --enable-filter=scale --enable-filter=crop --enable-filter=overlay --enable-filter=hstack --enable-filter=vstack --disable-bzlib --disable-iconv --disable-libxcb --disable-lzma --disable-sdl2 --disable-securetransport --disable-xlib --disable-zlib --enable-encoder=libvpx_vp8 --enable-encoder=libopus --enable-muxer=webm --enable-muxer=ogg --enable-muxer=null --enable-libopus --enable-libvpx --extra-cflags=-I../libvpx/dist/include --extra-ldflags=-L../libvpx/dist/lib
+
+  libavutil      56. 31.100 / 56. 31.100
+
+  libavcodec     58. 54.100 / 58. 54.100
+
+  libavformat    58. 29.100 / 58. 29.100
+
+  libavfilter     7. 57.100 /  7. 57.100
+
+  libswscale      5.  5.100 /  5.  5.100
+
+  libswresample   3.  5.100 /  3.  5.100
+
+[vp8 @ 0x6ac758] Warning: not compiled with thread support, using thread emulation
+
+[vorbis @ 0x6af528] Warning: not compiled with thread support, using thread emulation
+
+Input #0, matroska,webm, from '/dev/stdin':
+
+  Metadata:
+
+    encoder         : Lavf56.40.100
+
+  Duration: 00:00:03.95, start: 0.000000, bitrate: N/A
+
+    Stream #0:0: Video: vp8, yuv420p, 854x480, SAR 1:1 DAR 427:240, 24 fps, 24 tbr, 1k tbn, 1k tbc (default)
+
+    Stream #0:1: Audio: vorbis, 48000 Hz, stereo, fltp (default)
+
+    Stream #0:2(eng): Subtitle: webvtt
+
+[vp8 @ 0x6b32e0] Warning: not compiled with thread support, using thread emulation
+
+Stream mapping:
+
+  Stream #0:0 -> #0:0 (vp8 (native) -> vp8 (libvpx))
+
+[libvpx @ 0x6c0548] Warning: not compiled with thread support, using thread emulation
+
+[libvpx @ 0x6c0548] v1.8.2
+
+Output #0, webm, to 'out.webm':
+
+  Metadata:
+
+    encoder         : Lavf58.29.100
+
+    Stream #0:0: Video: vp8 (libvpx), yuv420p, 854x480 [SAR 1:1 DAR 427:240], q=-1--1, 200 kb/s, 24 fps, 1k tbn, 24 tbc (default)
+
+    Metadata:
+
+      encoder         : Lavc58.54.100 libvpx
+
+    Side data:
+
+      cpb: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: -1
+
+frame=    1 fps=0.3 q=0.0 size=       1kB time=00:00:00.00 bitrate=4760.0kbits/s speed=0.000348x    
+frame=    3 fps=0.8 q=0.0 size=       1kB time=00:00:00.08 bitrate=  56.7kbits/s speed=0.0214x    
+frame=    4 fps=0.9 q=0.0 size=       1kB time=00:00:00.12 bitrate=  37.8kbits/s speed=0.027x    
+frame=    5 fps=0.9 q=0.0 size=       1kB time=00:00:00.16 bitrate=  28.3kbits/s speed=0.0312x    
+frame=    5 fps=0.8 q=0.0 Lsize=      37kB time=00:00:00.16 bitrate=1786.0kbits/s speed=0.0275x    
+
+video:36kB audio:0kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 1.799479%
+
+{
+  name: 'out.webm',
+  data: Uint8Array(37507) [
+     26,  69, 223, 163, 159,  66, 134, 129,   1,  66, 247, 129,
+      1,  66, 242, 129,   4,  66, 243, 129,   8,  66, 130, 132,
+    119, 101,  98, 109,  66, 135, 129,   2,  66, 133, 129,   2,
+     24,  83, 128, 103,   1,   0,   0,   0,   0,   0, 146,  83,
+     17,  77, 155, 116, 187,  77, 187, 139,  83, 171, 132,  21,
+     73, 169, 102,  83, 172, 129, 229,  77, 187, 140,  83, 171,
+    132,  22,  84, 174, 107,  83, 172, 130,   1,  28,  77, 187,
+    140,  83, 171, 132,  18,  84, 195, 103,  83, 172, 130,   1,
+     94,  77, 187, 140,
+    ... 37407 more items
+  ]
+}
+      ✓ should encode test file to WebM/VP8 with stdin - large buffer (6734ms)
+
+
+  1 passing (7s)
+
